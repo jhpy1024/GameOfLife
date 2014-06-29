@@ -1,6 +1,8 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
+#include "Grid.hpp"
+
 #include <SFML/Graphics.hpp>
 
 class Application
@@ -24,6 +26,8 @@ private:
     sf::Clock m_Clock;
 
     sf::Time m_LastUpdateTime;
+
+    Grid m_Grid;
 };
 
 #endif

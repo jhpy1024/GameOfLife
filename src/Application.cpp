@@ -8,6 +8,7 @@ Application::Application(int width, int height, int numCells, const sf::Time& up
     , NUM_CELLS(numCells)
     , UPDATE_RATE(updateRate)
     , m_Window(sf::VideoMode(WIDTH, HEIGHT), "Game Of Life", sf::Style::Close)
+    , m_Grid(WIDTH, HEIGHT, NUM_CELLS)
 {
 
 }
@@ -51,5 +52,6 @@ void Application::update()
 void Application::draw()
 {
     m_Window.clear(sf::Color::White);
+    m_Window.draw(m_Grid);
     m_Window.display();
 }
