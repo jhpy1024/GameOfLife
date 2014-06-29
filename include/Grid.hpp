@@ -11,6 +11,9 @@ public:
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+    void toggleState(int x, int y);
+    void setCellState(int x, int y, int state);
+
 private:
     void drawCells(sf::RenderTarget& target, sf::RenderStates states) const;
     void drawLines(sf::RenderTarget& target, sf::RenderStates states) const;

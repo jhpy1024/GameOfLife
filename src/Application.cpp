@@ -33,6 +33,9 @@ void Application::handleInput()
             case sf::Event::Closed:
                 m_Window.close();
                 break;
+            case sf::Event::MouseButtonPressed:
+                handleMousePress(event);
+                break;
             default:
                 break;
         }
@@ -54,4 +57,15 @@ void Application::draw()
     m_Window.clear(sf::Color::White);
     m_Window.draw(m_Grid);
     m_Window.display();
+}
+
+void Application::handleMousePress(const sf::Event& event)
+{
+    int cellX = event.mouseButton.x / (WIDTH / NUM_CELLS);
+    int cellY = event.mouseButton.y / (HEIGHT / NUM_CELLS);
+
+    if (event.mouseButton.button == sf::Mouse::Left)
+    {
+        m_Grid.toggleState(cellX, cellY);
+    }
 }

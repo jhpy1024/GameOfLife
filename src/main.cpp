@@ -2,7 +2,7 @@
 
 int main()
 {
-    Application application(600, 600, 20, sf::seconds(1.f));
+    Application application(600, 600, 20, sf::seconds(0.2f));
     application.run();
 
     return 0;

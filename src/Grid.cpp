@@ -17,6 +17,17 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
     drawLines(target, states);
 }
 
+void Grid::toggleState(int x, int y)
+{
+    setCellState(x, y, (m_Cells[x][y] == 0 ? 1 : 0));
+}
+
+void Grid::setCellState(int x, int y, int state)
+{
+    m_Cells[x][y] = state;
+    m_CellShapes[x][y].setFillColor(state == 0 ? sf::Color::White : sf::Color::Black);
+}
+
 void Grid::drawCells(sf::RenderTarget& target, sf::RenderStates states) const
 {
     for (int x = 0; x < NUM_CELLS; ++x)

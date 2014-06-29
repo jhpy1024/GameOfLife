@@ -17,6 +17,9 @@ public:
     void draw();
 
 private:
+    void handleMousePress(const sf::Event& event);
+
+private:
     const int WIDTH;
     const int HEIGHT;
     const int NUM_CELLS;
