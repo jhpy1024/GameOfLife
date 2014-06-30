@@ -18,6 +18,7 @@ public:
 
 private:
     void handleMousePress(const sf::Event& event);
+    void handleKeyPress(const sf::Event& event);
 
 private:
     const int WIDTH;

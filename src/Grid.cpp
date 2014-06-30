@@ -6,9 +6,16 @@ Grid::Grid(int width, int height, int numCells)
     , NUM_CELLS(numCells)
     , m_Cells(NUM_CELLS, std::vector<int>(NUM_CELLS, 0))
     , m_CellShapes(NUM_CELLS, std::vector<sf::RectangleShape>(NUM_CELLS))
+    , m_IsPlaying(false)
 {
     createCellShapes();
     createLineShapes();
+}
+
+void Grid::update()
+{
+    if (!m_IsPlaying)
+        return;
 }
 
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -80,4 +87,18 @@ void Grid::createLineShapes()
         line.setSize({ WIDTH, 1.f });
         m_LineShapes.push_back(line);
     }
+}
+
+void Grid::reset()
+{
+    m_Cells = std::vector<std::vector<int>>(NUM_CELLS, std::vector<int>(NUM_CELLS, 0));
+    m_CellShapes = std::vector<std::vector<sf::RectangleShape>>(NUM_CELLS, std::vector<sf::RectangleShape>(NUM_CELLS));
+    m_IsPlaying = false;
+
+    createCellShapes();
+}
+
+void Grid::togglePlayState()
+{
+    m_IsPlaying = !m_IsPlaying;
 }

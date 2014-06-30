@@ -36,6 +36,9 @@ void Application::handleInput()
             case sf::Event::MouseButtonPressed:
                 handleMousePress(event);
                 break;
+            case sf::Event::KeyPressed:
+                handleKeyPress(event);
+                break;
             default:
                 break;
         }
@@ -48,7 +51,7 @@ void Application::update()
     if (currentTime - m_LastUpdateTime < UPDATE_RATE)
         return;
 
-    // ...update...
+    m_Grid.update();
     m_LastUpdateTime = currentTime;
 }
 
@@ -68,4 +71,12 @@ void Application::handleMousePress(const sf::Event& event)
     {
         m_Grid.toggleState(cellX, cellY);
     }
+}
+
+void Application::handleKeyPress(const sf::Event& event)
+{
+    if (event.key.code == sf::Keyboard::Space)
+        m_Grid.togglePlayState();
+    else if (event.key.code == sf::Keyboard::Escape)
+        m_Grid.reset();
 }

@@ -9,10 +9,14 @@ class Grid : public sf::Drawable
 public:
     Grid(int width, int height, int numCells);
 
+    void update();
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
     void toggleState(int x, int y);
     void setCellState(int x, int y, int state);
+
+    void reset();
+    void togglePlayState();
 
 private:
     void drawCells(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -30,6 +34,8 @@ private:
 
     std::vector<std::vector<sf::RectangleShape>> m_CellShapes;
     std::vector<sf::RectangleShape> m_LineShapes;
+
+    bool m_IsPlaying;
 };
 
 #endif
