@@ -67,7 +67,7 @@ void Application::handleMousePress(const sf::Event& event)
     int cellX = event.mouseButton.x / (WIDTH / NUM_CELLS);
     int cellY = event.mouseButton.y / (HEIGHT / NUM_CELLS);
 
-    if (event.mouseButton.button == sf::Mouse::Left)
+    if (event.mouseButton.button == sf::Mouse::Left && !m_Grid.isPlaying())
     {
         m_Grid.toggleState(cellX, cellY);
     }

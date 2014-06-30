@@ -18,12 +18,16 @@ public:
     void reset();
     void togglePlayState();
 
+    bool isPlaying() const;
+
 private:
     void drawCells(sf::RenderTarget& target, sf::RenderStates states) const;
     void drawLines(sf::RenderTarget& target, sf::RenderStates states) const;
 
     void createCellShapes();
     void createLineShapes();
+
+    int getNumLiveNeighbors(int x, int y) const;
 
 private:
     const int WIDTH;

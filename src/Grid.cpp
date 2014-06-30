@@ -1,5 +1,8 @@
 #include "Grid.hpp"
 
+#include <map>
+#include <iostream>
+
 Grid::Grid(int width, int height, int numCells)
     : WIDTH(width)
     , HEIGHT(height)
@@ -16,6 +19,35 @@ void Grid::update()
 {
     if (!m_IsPlaying)
         return;
+
+    std::map<std::pair<int,int>, int> stateChanges;
+
+    for (int x = 0; x < NUM_CELLS; ++x)
+    {
+        for (int y = 0; y < NUM_CELLS; ++y)
+        {
+            auto numLiveNeighbors = getNumLiveNeighbors(x, y);
+
+            if (m_Cells[x][y] == 1)
+            {
+                if ((numLiveNeighbors < 2) || (numLiveNeighbors > 3))
+                    stateChanges[std::make_pair(x, y)] = 0;
+            }
+            else
+            {
+                if (numLiveNeighbors == 3)
+                    stateChanges[std::make_pair(x, y)] = 1;
+            }
+        }
+    }
+
+    for (auto& pair : stateChanges)
+    {
+        auto x = pair.first.first;
+        auto y = pair.first.second;
+
+        setCellState(x, y, pair.second);
+    }
 }
 
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -33,6 +65,25 @@ void Grid::setCellState(int x, int y, int state)
 {
     m_Cells[x][y] = state;
     m_CellShapes[x][y].setFillColor(state == 0 ? sf::Color::White : sf::Color::Black);
+}
+
+void Grid::reset()
+{
+    m_Cells = std::vector<std::vector<int>>(NUM_CELLS, std::vector<int>(NUM_CELLS, 0));
+    m_CellShapes = std::vector<std::vector<sf::RectangleShape>>(NUM_CELLS, std::vector<sf::RectangleShape>(NUM_CELLS));
+    m_IsPlaying = false;
+
+    createCellShapes();
+}
+
+void Grid::togglePlayState()
+{
+    m_IsPlaying = !m_IsPlaying;
+}
+
+bool Grid::isPlaying() const
+{
+    return m_IsPlaying;
 }
 
 void Grid::drawCells(sf::RenderTarget& target, sf::RenderStates states) const
@@ -89,16 +140,33 @@ void Grid::createLineShapes()
     }
 }
 
-void Grid::reset()
+int Grid::getNumLiveNeighbors(int x, int y) const
 {
-    m_Cells = std::vector<std::vector<int>>(NUM_CELLS, std::vector<int>(NUM_CELLS, 0));
-    m_CellShapes = std::vector<std::vector<sf::RectangleShape>>(NUM_CELLS, std::vector<sf::RectangleShape>(NUM_CELLS));
-    m_IsPlaying = false;
+    int numLiveNeighbors = 0;
 
-    createCellShapes();
-}
+    // Copy of cells with padding so that we don't have to check
+    // if the cell is on one of the edges, just check (x-1,y-1) to (x+1,y+1),
+    // not counting (x,y)
+    std::vector<std::vector<int>> cells(NUM_CELLS + 2, std::vector<int>(NUM_CELLS + 2, 0));
+    for (int i = 0; i < NUM_CELLS; ++i)
+    {
+        for (int j = 0; j < NUM_CELLS; ++j)
+        {
+            cells[i+1][j+1] = m_Cells[i][j];
+        }
+    }
 
-void Grid::togglePlayState()
-{
-    m_IsPlaying = !m_IsPlaying;
+    int offsetX = x + 1;
+    int offsetY = y + 1;
+
+    if (cells[offsetX][offsetY-1] == 1) ++numLiveNeighbors;        // North
+    if (cells[offsetX+1][offsetY-1] == 1) ++numLiveNeighbors;      // North East
+    if (cells[offsetX+1][offsetY] == 1) ++numLiveNeighbors;        // East
+    if (cells[offsetX+1][offsetY+1] == 1) ++numLiveNeighbors;      // South East
+    if (cells[offsetX][offsetY+1] == 1) ++numLiveNeighbors;        // South
+    if (cells[offsetX-1][offsetY+1] == 1) ++numLiveNeighbors;      // South West
+    if (cells[offsetX-1][offsetY] == 1) ++numLiveNeighbors;        // West
+    if (cells[offsetX-1][offsetY-1] == 1) ++numLiveNeighbors;      // North West
+
+    return numLiveNeighbors;
 }
