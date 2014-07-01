@@ -7,9 +7,12 @@ Grid::Grid(int width, int height, int numCells)
     : WIDTH(width)
     , HEIGHT(height)
     , NUM_CELLS(numCells)
+    , ALIVE_COLOR(sf::Color::Black)
+    , DEAD_COLOR(sf::Color::White)
     , m_Cells(NUM_CELLS, std::vector<int>(NUM_CELLS, 0))
     , m_CellShapes(NUM_CELLS, std::vector<sf::RectangleShape>(NUM_CELLS))
     , m_IsPlaying(false)
+    , m_NumGenerations(0)
 {
     createCellShapes();
     createLineShapes();
@@ -48,6 +51,8 @@ void Grid::update()
 
         setCellState(x, y, pair.second);
     }
+
+    ++m_NumGenerations;
 }
 
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -64,7 +69,7 @@ void Grid::toggleState(int x, int y)
 void Grid::setCellState(int x, int y, int state)
 {
     m_Cells[x][y] = state;
-    m_CellShapes[x][y].setFillColor(state == 0 ? sf::Color::White : sf::Color::Black);
+    m_CellShapes[x][y].setFillColor(state == 0 ? DEAD_COLOR : ALIVE_COLOR);
 }
 
 void Grid::reset()
@@ -72,6 +77,7 @@ void Grid::reset()
     m_Cells = std::vector<std::vector<int>>(NUM_CELLS, std::vector<int>(NUM_CELLS, 0));
     m_CellShapes = std::vector<std::vector<sf::RectangleShape>>(NUM_CELLS, std::vector<sf::RectangleShape>(NUM_CELLS));
     m_IsPlaying = false;
+    m_NumGenerations = 0;
 
     createCellShapes();
 }
@@ -84,6 +90,11 @@ void Grid::togglePlayState()
 bool Grid::isPlaying() const
 {
     return m_IsPlaying;
+}
+
+int Grid::getNumGenerations() const
+{
+    return m_NumGenerations;
 }
 
 void Grid::drawCells(sf::RenderTarget& target, sf::RenderStates states) const
@@ -116,7 +127,7 @@ void Grid::createCellShapes()
 
             m_CellShapes[x][y].setSize({ width, height });
             m_CellShapes[x][y].setPosition(x * width, y * height);
-            m_CellShapes[x][y].setFillColor(sf::Color::White);
+            m_CellShapes[x][y].setFillColor(DEAD_COLOR);
         }
     }
 }

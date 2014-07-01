@@ -8,8 +8,10 @@ Application::Application(int width, int height, int numCells, const sf::Time& up
     , NUM_CELLS(numCells)
     , UPDATE_RATE(updateRate)
     , m_Window(sf::VideoMode(WIDTH, HEIGHT), "Game Of Life", sf::Style::Close)
-    , m_View(sf::FloatRect(0, 0, WIDTH, HEIGHT))
-    , m_Grid(WIDTH, HEIGHT, NUM_CELLS)
+    , m_MainView(sf::FloatRect(0, 0, WIDTH, WIDTH))
+    , m_InfoView(sf::FloatRect(WIDTH / 2.f, (HEIGHT - WIDTH) + (HEIGHT - WIDTH) / 2.f, WIDTH, HEIGHT - WIDTH))
+    , m_Grid(WIDTH, WIDTH, NUM_CELLS) // width == height to ensure cells are square
+    , m_InfoBar({ 0.f, WIDTH }, { WIDTH, HEIGHT - WIDTH })
 {
 
 }
@@ -53,20 +55,31 @@ void Application::update()
         return;
 
     m_Grid.update();
+    m_InfoBar.setGenerationNumber(m_Grid.getNumGenerations());
+
     m_LastUpdateTime = currentTime;
 }
 
 void Application::draw()
 {
     m_Window.clear(sf::Color::White);
-    m_Window.setView(m_View);
+
+    m_Window.setView(m_MainView);
     m_Window.draw(m_Grid);
+
+    m_Window.setView(m_InfoView);
+    m_Window.draw(m_InfoBar);
+
     m_Window.display();
 }
 
 void Application::handleMousePress(const sf::Event& event)
 {
+    auto tmpView = m_Window.getView();
+    m_Window.setView(m_MainView);
     auto mousePos = m_Window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
+    m_Window.setView(tmpView);
+
     auto cellX = mousePos.x / (WIDTH / NUM_CELLS);
     auto cellY = mousePos.y / (HEIGHT / NUM_CELLS);
 
@@ -83,15 +96,15 @@ void Application::handleKeyPress(const sf::Event& event)
     else if (event.key.code == sf::Keyboard::Escape)
         m_Grid.reset();
     else if (event.key.code == sf::Keyboard::I)
-        m_View.zoom(0.9f);
+        m_MainView.zoom(0.9f);
     else if (event.key.code == sf::Keyboard::R)
-        m_View = m_Window.getDefaultView();
+        m_MainView = sf::View(sf::FloatRect(0.f, 0.f, WIDTH, HEIGHT));
     else if (event.key.code == sf::Keyboard::Left)
-        m_View.move(-(WIDTH / NUM_CELLS), 0.f);
+        m_MainView.move(-(WIDTH / NUM_CELLS), 0.f);
     else if (event.key.code == sf::Keyboard::Right)
-        m_View.move(WIDTH / NUM_CELLS, 0.f);
+        m_MainView.move(WIDTH / NUM_CELLS, 0.f);
     else if (event.key.code == sf::Keyboard::Up)
-        m_View.move(0.f, -(HEIGHT / NUM_CELLS));
+        m_MainView.move(0.f, -(HEIGHT / NUM_CELLS));
     else if (event.key.code == sf::Keyboard::Down)
-        m_View.move(0.f, HEIGHT / NUM_CELLS);
+        m_MainView.move(0.f, HEIGHT / NUM_CELLS);
 }

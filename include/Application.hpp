@@ -2,6 +2,7 @@
 #define APPLICATION_HPP
 
 #include "Grid.hpp"
+#include "InfoBar.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -27,12 +28,15 @@ private:
     const sf::Time UPDATE_RATE;
 
     sf::RenderWindow m_Window;
-    sf::View m_View;
+    sf::View m_MainView;
+    sf::View m_InfoView;
 
     sf::Clock m_Clock;
     sf::Time m_LastUpdateTime;
 
     Grid m_Grid;
+
+    InfoBar m_InfoBar;
 };
 
 #endif

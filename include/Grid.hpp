@@ -20,6 +20,8 @@ public:
 
     bool isPlaying() const;
 
+    int getNumGenerations() const;
+
 private:
     void drawCells(sf::RenderTarget& target, sf::RenderStates states) const;
     void drawLines(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -34,12 +36,17 @@ private:
     const int HEIGHT;
     const int NUM_CELLS;
 
+    const sf::Color ALIVE_COLOR;
+    const sf::Color DEAD_COLOR;
+
     std::vector<std::vector<int>> m_Cells;
 
     std::vector<std::vector<sf::RectangleShape>> m_CellShapes;
     std::vector<sf::RectangleShape> m_LineShapes;
 
     bool m_IsPlaying;
+
+    int m_NumGenerations;
 };
 
 #endif
