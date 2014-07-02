@@ -25,12 +25,12 @@ private:
     const int WIDTH;
     const int HEIGHT;
     const int NUM_CELLS;
-    const sf::Time UPDATE_RATE;
 
     sf::RenderWindow m_Window;
     sf::View m_View;
 
     sf::Clock m_Clock;
+    sf::Time m_UpdateRate;
     sf::Time m_LastUpdateTime;
 
     Grid m_Grid;

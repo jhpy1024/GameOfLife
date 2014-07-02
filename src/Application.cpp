@@ -6,9 +6,9 @@ Application::Application(int width, int height, int numCells, const sf::Time& up
     : WIDTH(width)
     , HEIGHT(height)
     , NUM_CELLS(numCells)
-    , UPDATE_RATE(updateRate)
     , m_Window(sf::VideoMode(WIDTH, HEIGHT), "Game Of Life", sf::Style::Close)
     , m_View(sf::FloatRect(0, 0, WIDTH, WIDTH))
+    , m_UpdateRate(updateRate)
     , m_Grid(WIDTH, WIDTH, NUM_CELLS) // width == height to ensure cells are square
     , m_InfoBar({ 0.f, WIDTH + (WIDTH / NUM_CELLS) }, { WIDTH, HEIGHT - (WIDTH + WIDTH / NUM_CELLS) })
 {
@@ -49,7 +49,7 @@ void Application::handleInput()
 void Application::update()
 {
     auto currentTime = m_Clock.getElapsedTime();
-    if (currentTime - m_LastUpdateTime < UPDATE_RATE)
+    if (currentTime - m_LastUpdateTime < m_UpdateRate)
         return;
 
     m_Grid.update();
