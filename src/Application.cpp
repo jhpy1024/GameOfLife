@@ -10,9 +10,8 @@ Application::Application(int width, int height, int numCells, const sf::Time& up
     , m_Window(sf::VideoMode(WIDTH, HEIGHT), "Game Of Life", sf::Style::Close)
     , m_View(sf::FloatRect(0, 0, WIDTH, WIDTH))
     , m_Grid(WIDTH, WIDTH, NUM_CELLS) // width == height to ensure cells are square
-    , m_InfoBar({ 0.f, WIDTH }, { WIDTH, HEIGHT - WIDTH })
+    , m_InfoBar({ 0.f, WIDTH + (WIDTH / NUM_CELLS) }, { WIDTH, HEIGHT - (WIDTH + WIDTH / NUM_CELLS) })
 {
-
 }
 
 void Application::run()
@@ -94,7 +93,7 @@ void Application::handleKeyPress(const sf::Event& event)
     else if (event.key.code == sf::Keyboard::I)
         m_View.zoom(0.9f);
     else if (event.key.code == sf::Keyboard::R)
-        m_View = sf::View(sf::FloatRect(0.f, 0.f, WIDTH, HEIGHT));
+        m_View = sf::View(sf::FloatRect(0.f, 0.f, WIDTH, WIDTH));
     else if (event.key.code == sf::Keyboard::Left)
         m_View.move(-(WIDTH / NUM_CELLS), 0.f);
     else if (event.key.code == sf::Keyboard::Right)

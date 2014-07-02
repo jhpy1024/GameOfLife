@@ -4,6 +4,8 @@
 
 InfoBar::InfoBar(const sf::Vector2f& position, const sf::Vector2f& size)
 {
+    std::printf("Size=(%f,%f)\n", size.x, size.y);
+
     setPosition(position);
 
     m_Background.setSize(size);
@@ -24,7 +26,18 @@ InfoBar::InfoBar(const sf::Vector2f& position, const sf::Vector2f& size)
     setUpdateRate(sf::seconds(2));
 
     m_GenerationText.setPosition(position);
-    m_UpdateRateText.setPosition(position.x, position.y + m_GenerationText.getLocalBounds().height * 2.f);
+    m_UpdateRateText.setPosition(position.x + m_GenerationText.getLocalBounds().width * 2.f, position.y);
+
+    m_UpArrowTexture.loadFromFile("res/upArrow.png");
+
+    m_IncUpdateRate.setTexture(m_UpArrowTexture);
+    m_DecUpdateRate.setTexture(m_UpArrowTexture);
+
+    m_IncUpdateRate.setPosition(position.x + size.x - m_UpArrowTexture.getSize().x * 2, position.y);
+    m_DecUpdateRate.setPosition(position.x + size.x - m_UpArrowTexture.getSize().x, position.y);
+
+    m_DecUpdateRate.setTextureRect(sf::IntRect(0, m_UpArrowTexture.getSize().y, m_UpArrowTexture.getSize().x,
+                                               -m_UpArrowTexture.getSize().y));
 }
 
 void InfoBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -34,6 +47,8 @@ void InfoBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(m_Background);
     target.draw(m_GenerationText);
     target.draw(m_UpdateRateText);
+    target.draw(m_IncUpdateRate);
+    target.draw(m_DecUpdateRate);
 }
 
 void InfoBar::setGenerationNumber(int generation)

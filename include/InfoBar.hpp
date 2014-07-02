@@ -20,6 +20,10 @@ private:
     sf::Text m_UpdateRateText;
 
     sf::RectangleShape m_Background;
+
+    sf::Texture m_UpArrowTexture;
+    sf::Sprite m_IncUpdateRate;
+    sf::Sprite m_DecUpdateRate;
 };
 
 #endif
