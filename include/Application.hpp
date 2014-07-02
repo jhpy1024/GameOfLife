@@ -28,8 +28,7 @@ private:
     const sf::Time UPDATE_RATE;
 
     sf::RenderWindow m_Window;
-    sf::View m_MainView;
-    sf::View m_InfoView;
+    sf::View m_View;
 
     sf::Clock m_Clock;
     sf::Time m_LastUpdateTime;
