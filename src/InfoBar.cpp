@@ -3,6 +3,8 @@
 #include <iostream>
 
 InfoBar::InfoBar(const sf::Vector2f& position, const sf::Vector2f& size)
+    : m_IncreaseRateClicked(false)
+    , m_DecreaseRateClicked(false)
 {
     std::printf("Size=(%f,%f)\n", size.x, size.y);
 
@@ -51,6 +53,19 @@ void InfoBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(m_DecUpdateRate);
 }
 
+void InfoBar::handleMousePress(const sf::Event& event)
+{
+    sf::FloatRect mouseRect(event.mouseButton.x, event.mouseButton.y, 1.f, 1.f);
+
+    if (event.mouseButton.button == sf::Mouse::Left)
+    {
+        if (mouseRect.intersects(m_IncUpdateRate.getGlobalBounds()))
+            m_IncreaseRateClicked = true;
+        else if (mouseRect.intersects(m_DecUpdateRate.getGlobalBounds()))
+            m_DecreaseRateClicked = true;
+    }
+}
+
 void InfoBar::setGenerationNumber(int generation)
 {
     m_GenerationText.setString("Generation: " + std::to_string(generation));
@@ -58,5 +73,29 @@ void InfoBar::setGenerationNumber(int generation)
 
 void InfoBar::setUpdateRate(const sf::Time& rate)
 {
-    m_UpdateRateText.setString("Update rate: " + std::to_string(rate.asMilliseconds()));
+    m_UpdateRateText.setString("Update rate: " + std::to_string(rate.asMilliseconds()) + "ms");
+}
+
+bool InfoBar::increaseRateClicked()
+{
+    if (m_IncreaseRateClicked)
+    {
+        // Click has been handled so set to false
+        m_IncreaseRateClicked = false;
+        return true;
+    }
+
+    return false;
+}
+
+bool InfoBar::decreaseRateClicked()
+{
+    if (m_DecreaseRateClicked)
+    {
+        // Click has been handled so set to false
+        m_DecreaseRateClicked = false;
+        return true;
+    }
+
+    return false;
 }

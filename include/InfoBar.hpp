@@ -10,8 +10,13 @@ public:
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+    void handleMousePress(const sf::Event& event);
+
     void setGenerationNumber(int generation);
     void setUpdateRate(const sf::Time& rate);
+
+    bool increaseRateClicked();
+    bool decreaseRateClicked();
 
 private:
     sf::Font m_Font;
@@ -24,6 +29,9 @@ private:
     sf::Texture m_UpArrowTexture;
     sf::Sprite m_IncUpdateRate;
     sf::Sprite m_DecUpdateRate;
+
+    bool m_IncreaseRateClicked;
+    bool m_DecreaseRateClicked;
 };
 
 #endif

@@ -44,16 +44,24 @@ void Application::handleInput()
                 break;
         }
     }
+
+    if (m_InfoBar.increaseRateClicked())
+        m_UpdateRate += sf::milliseconds(10);
+    else if (m_InfoBar.decreaseRateClicked() && m_UpdateRate > sf::milliseconds(0))
+        m_UpdateRate -= sf::milliseconds(10);
 }
 
 void Application::update()
 {
+    // Update these regardless of whether we should update yet
+    m_InfoBar.setGenerationNumber(m_Grid.getNumGenerations());
+    m_InfoBar.setUpdateRate(m_UpdateRate);
+
     auto currentTime = m_Clock.getElapsedTime();
     if (currentTime - m_LastUpdateTime < m_UpdateRate)
         return;
 
     m_Grid.update();
-    m_InfoBar.setGenerationNumber(m_Grid.getNumGenerations());
 
     m_LastUpdateTime = currentTime;
 }
@@ -73,6 +81,8 @@ void Application::draw()
 
 void Application::handleMousePress(const sf::Event& event)
 {
+    m_InfoBar.handleMousePress(event);
+
     auto mousePos = m_Window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y }, m_View);
 
     auto cellX = mousePos.x / (WIDTH / NUM_CELLS);
