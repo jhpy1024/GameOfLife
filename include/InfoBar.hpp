@@ -19,6 +19,13 @@ public:
     bool decreaseRateClicked();
 
 private:
+    void createBackground();
+    void createText();
+    void createSprites();
+
+private:
+    const sf::Vector2f SIZE;
+
     sf::Font m_Font;
 
     sf::Text m_GenerationText;
