@@ -18,13 +18,24 @@ public:
     void draw();
 
 private:
+    void drawGrid();
+    void drawInfoBar();
+
     void handleMousePress(const sf::Event& event);
     void handleKeyPress(const sf::Event& event);
+    void handleInfoBarInput();
+
+    void updateInfoBar();
 
 private:
     const int WIDTH;
     const int HEIGHT;
     const int NUM_CELLS;
+    const float ZOOM_FACTOR;
+    const int HORIZONTAL_VIEW_MOVEMENT;
+    const int VERTICAL_VIEW_MOVEMENT;
+    const sf::Time UPDATE_RATE_INCREMENT;
+    const sf::Time UPDATE_RATE_DECREMENT;
 
     sf::RenderWindow m_Window;
     sf::View m_View;

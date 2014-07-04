@@ -23,6 +23,7 @@ void Grid::update()
     if (!m_IsPlaying)
         return;
 
+    // Maps coordinates to its new state
     std::map<std::pair<int,int>, int> stateChanges;
 
     for (int x = 0; x < NUM_CELLS; ++x)
@@ -157,7 +158,9 @@ int Grid::getNumLiveNeighbors(int x, int y) const
 
     // Copy of cells with padding so that we don't have to check
     // if the cell is on one of the edges, just check (x-1,y-1) to (x+1,y+1),
-    // not counting (x,y)
+    // not including itself (x,y)
+
+    // Create a temp copy of the cells array
     std::vector<std::vector<int>> cells(NUM_CELLS + 2, std::vector<int>(NUM_CELLS + 2, 0));
     for (int i = 0; i < NUM_CELLS; ++i)
     {

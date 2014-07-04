@@ -6,6 +6,11 @@ Application::Application(int width, int height, int numCells, const sf::Time& up
     : WIDTH(width)
     , HEIGHT(height)
     , NUM_CELLS(numCells)
+    , ZOOM_FACTOR(0.9f)
+    , HORIZONTAL_VIEW_MOVEMENT(WIDTH / NUM_CELLS)
+    , VERTICAL_VIEW_MOVEMENT(HEIGHT / NUM_CELLS)
+    , UPDATE_RATE_INCREMENT(sf::milliseconds(10))
+    , UPDATE_RATE_DECREMENT(sf::milliseconds(10))
     , m_Window(sf::VideoMode(WIDTH, HEIGHT), "Game Of Life", sf::Style::Close)
     , m_View(sf::FloatRect(0, 0, WIDTH, WIDTH))
     , m_UpdateRate(updateRate)
@@ -45,17 +50,12 @@ void Application::handleInput()
         }
     }
 
-    if (m_InfoBar.increaseRateClicked())
-        m_UpdateRate += sf::milliseconds(10);
-    else if (m_InfoBar.decreaseRateClicked() && m_UpdateRate > sf::milliseconds(0))
-        m_UpdateRate -= sf::milliseconds(10);
+    handleInfoBarInput();
 }
 
 void Application::update()
 {
-    // Update these regardless of whether we should update yet
-    m_InfoBar.setGenerationNumber(m_Grid.getNumGenerations());
-    m_InfoBar.setUpdateRate(m_UpdateRate);
+    updateInfoBar();
 
     auto currentTime = m_Clock.getElapsedTime();
     if (currentTime - m_LastUpdateTime < m_UpdateRate)
@@ -70,13 +70,22 @@ void Application::draw()
 {
     m_Window.clear(sf::Color::White);
 
-    m_Window.setView(m_View);
-    m_Window.draw(m_Grid);
-
-    m_Window.setView(m_Window.getDefaultView());
-    m_Window.draw(m_InfoBar);
+    drawGrid();
+    drawInfoBar();
 
     m_Window.display();
+}
+
+void Application::drawGrid()
+{
+    m_Window.setView(m_View);
+    m_Window.draw(m_Grid);
+}
+
+void Application::drawInfoBar()
+{
+    m_Window.setView(m_Window.getDefaultView());
+    m_Window.draw(m_InfoBar);
 }
 
 void Application::handleMousePress(const sf::Event& event)
@@ -101,15 +110,29 @@ void Application::handleKeyPress(const sf::Event& event)
     else if (event.key.code == sf::Keyboard::Escape)
         m_Grid.reset();
     else if (event.key.code == sf::Keyboard::I)
-        m_View.zoom(0.9f);
+        m_View.zoom(ZOOM_FACTOR);
     else if (event.key.code == sf::Keyboard::R)
         m_View = sf::View(sf::FloatRect(0.f, 0.f, WIDTH, WIDTH));
     else if (event.key.code == sf::Keyboard::Left)
-        m_View.move(-(WIDTH / NUM_CELLS), 0.f);
+        m_View.move(-HORIZONTAL_VIEW_MOVEMENT, 0.f);
     else if (event.key.code == sf::Keyboard::Right)
-        m_View.move(WIDTH / NUM_CELLS, 0.f);
+        m_View.move(HORIZONTAL_VIEW_MOVEMENT, 0.f);
     else if (event.key.code == sf::Keyboard::Up)
-        m_View.move(0.f, -(HEIGHT / NUM_CELLS));
+        m_View.move(0.f, -VERTICAL_VIEW_MOVEMENT);
     else if (event.key.code == sf::Keyboard::Down)
-        m_View.move(0.f, HEIGHT / NUM_CELLS);
+        m_View.move(0.f, VERTICAL_VIEW_MOVEMENT);
+}
+
+void Application::handleInfoBarInput()
+{
+    if (m_InfoBar.increaseRateClicked())
+        m_UpdateRate += UPDATE_RATE_INCREMENT;
+    else if (m_InfoBar.decreaseRateClicked() && m_UpdateRate > sf::milliseconds(0))
+        m_UpdateRate -= UPDATE_RATE_DECREMENT;
+}
+
+void Application::updateInfoBar()
+{
+    m_InfoBar.setGenerationNumber(m_Grid.getNumGenerations());
+    m_InfoBar.setUpdateRate(m_UpdateRate);
 }
